@@ -3,7 +3,7 @@ package com.bridgeLabz.addressBook;
 import java.util.Scanner;
 
 public class AddressBook {
-	
+
 	static Contacts[] contactList = new Contacts[5];
 	static int contactsCount = 0;
 
@@ -15,10 +15,11 @@ public class AddressBook {
 		int flag = 0;
 
 		while (flag == 0) {
-			
+
 			System.out.println("Enter 1 to add");
 			System.out.println("Enter 2 to edit");
-			System.out.println("Enter 3 to exit");
+			System.out.println("Enter 3 to delete");
+			System.out.println("Enter 4 to exit");
 
 			input = s.nextInt();
 
@@ -30,9 +31,41 @@ public class AddressBook {
 				editContact();
 				break;
 			case (3):
+				deleteContact();
+			break;
+			case (4):
 				flag = 1;
 				break;
 
+			}
+
+		}
+
+	}
+
+	private static void deleteContact() {
+		Scanner s = new Scanner(System.in);
+
+		String firstName;
+
+		System.out.println("Enter the detail to delete data from the address book");
+
+		System.out.print("Enter you first name : ");
+		firstName = s.next();
+
+		for (int i = 0; i < contactsCount; i++) {
+
+			if (contactList[i].firstName.equals(firstName)) {
+
+				contactList[i].firstName = null;
+				contactList[i].lastName = null;
+				contactList[i].address = null;
+				contactList[i].city = null;
+				contactList[i].state = null;
+				contactList[i].zip =  null;
+				contactList[i].phoneNumber = null;
+
+				return;
 			}
 
 		}
@@ -74,18 +107,17 @@ public class AddressBook {
 		phoneNumber = s.next();
 
 		Contacts contacts = new Contacts(firstName, lastName, city, state, address, zip, phoneNumber);
-		
+
 		contactList[contactsCount++] = contacts;
-		
 
 	}
-	
+
 	public static void editContact() {
-		
+
 		Scanner s = new Scanner(System.in);
-		
+
 		System.out.println("Enter the details to edit");
-		
+
 		String firstName;
 		String lastName;
 		String city;
@@ -118,17 +150,17 @@ public class AddressBook {
 		phoneNumber = s.next();
 
 		Contacts contacts = new Contacts(firstName, lastName, city, state, address, zip, phoneNumber);
-		
+
 		findContact(firstName, contacts);
-		
+
 	}
-	
+
 	public static void findContact(String name, Contacts contacts) {
-		
-		for (int i=0;i<contactsCount;i++) {
-			
+
+		for (int i = 0; i < contactsCount; i++) {
+
 			if (contactList[i].firstName.equals(name)) {
-				
+
 				contactList[i].firstName = contacts.firstName;
 				contactList[i].lastName = contacts.lastName;
 				contactList[i].address = contacts.address;
@@ -136,14 +168,14 @@ public class AddressBook {
 				contactList[i].state = contacts.state;
 				contactList[i].zip = contacts.zip;
 				contactList[i].phoneNumber = contacts.phoneNumber;
-				
+
 				return;
 			}
-			
+
 		}
-		
+
 		System.out.println("Name not found try again");
-		
+
 	}
-	
+
 }
