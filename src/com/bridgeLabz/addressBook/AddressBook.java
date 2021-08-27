@@ -32,7 +32,7 @@ public class AddressBook {
 				break;
 			case (3):
 				deleteContact();
-			break;
+				break;
 			case (4):
 				flag = 1;
 				break;
@@ -62,13 +62,15 @@ public class AddressBook {
 				contactList[i].address = null;
 				contactList[i].city = null;
 				contactList[i].state = null;
-				contactList[i].zip =  null;
+				contactList[i].zip = null;
 				contactList[i].phoneNumber = null;
-
+				System.out.println("Deleted successfully");
 				return;
 			}
 
 		}
+		
+		System.out.println("Name not found");
 
 	}
 
@@ -107,8 +109,15 @@ public class AddressBook {
 		phoneNumber = s.next();
 
 		Contacts contacts = new Contacts(firstName, lastName, city, state, address, zip, phoneNumber);
+		
+		if (!findContact(firstName, contacts)) {
+			contactList[contactsCount++] = contacts;
+			System.out.println("Added successfully");
+		}
+		else {
+			System.out.println("Name already exists. Please try Again");
+		}
 
-		contactList[contactsCount++] = contacts;
 
 	}
 
@@ -151,15 +160,9 @@ public class AddressBook {
 
 		Contacts contacts = new Contacts(firstName, lastName, city, state, address, zip, phoneNumber);
 
-		findContact(firstName, contacts);
-
-	}
-
-	public static void findContact(String name, Contacts contacts) {
-
 		for (int i = 0; i < contactsCount; i++) {
 
-			if (contactList[i].firstName.equals(name)) {
+			if (contactList[i].firstName.equals(firstName)) {
 
 				contactList[i].firstName = contacts.firstName;
 				contactList[i].lastName = contacts.lastName;
@@ -168,7 +171,7 @@ public class AddressBook {
 				contactList[i].state = contacts.state;
 				contactList[i].zip = contacts.zip;
 				contactList[i].phoneNumber = contacts.phoneNumber;
-
+				System.out.println("Edited successfully");
 				return;
 			}
 
@@ -176,6 +179,20 @@ public class AddressBook {
 
 		System.out.println("Name not found try again");
 
+	}
+
+	public static boolean findContact(String name, Contacts contacts) {
+
+		for (int i = 0; i < contactsCount; i++) {
+
+			if (contactList[i].firstName.equals(name)) {
+
+				return true;
+			}
+
+		}
+
+		return false;
 	}
 
 }
