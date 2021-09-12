@@ -48,7 +48,7 @@ public class AddressBook {
 				break;
 
 			}
-			searchPersonInCityOrState("asd", "asd");
+			searchPersonInCityOrState("asd", "qwe");
 
 		}
 
@@ -179,13 +179,15 @@ public class AddressBook {
 	}
 
 	public static void searchPersonInCityOrState(String state, String city) {
-		List<String> cityAndState = contactList.entrySet().stream().filter(e -> e.getValue().city.startsWith(city))
+		List<String> cityAndPerson = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(city))
 				.map(Map.Entry::getKey).collect(Collectors.toList());
 		
-		cityAndState = contactList.entrySet().stream().filter(e -> e.getValue().city.startsWith(state))
+		List<String> stateAndPerson = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(state))
 				.map(Map.Entry::getKey).collect(Collectors.toList());
 		
-		System.out.println(cityAndState.toString());
+		System.out.println(cityAndPerson.toString());
+		System.out.println(stateAndPerson.toString());
+
 
 	}
 
