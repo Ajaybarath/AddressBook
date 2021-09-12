@@ -1,10 +1,18 @@
 package com.bridgeLabz.addressBook;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class AddressBook {
 
-	static Contacts[] contactList = new Contacts[5];
+//	static Contacts[] contactList = new Contacts[5];
+	static Map<String, Contacts> contactList = new HashMap<>();
+
 	static int contactsCount = 0;
 
 	public static void main(String args[]) {
@@ -53,26 +61,12 @@ public class AddressBook {
 		System.out.print("Enter you first name : ");
 		firstName = s.next();
 
-		for (int i = 0; i < contactsCount; i++) {
-
-			if (contactList[i].firstName.equals(firstName)) {
-
-				contactList[i].firstName = null;
-				contactList[i].lastName = null;
-				contactList[i].address = null;
-				contactList[i].city = null;
-				contactList[i].state = null;
-				contactList[i].zip = null;
-				contactList[i].phoneNumber = null;
-				System.out.println("Deleted successfully");
-				return;
-			}
-
-		}
+		contactList.remove(firstName);
 		
-		System.out.println("Name not found");
+		System.out.println("Deleted successfully");
 
 	}
+
 
 	public static void addContact() {
 		Scanner s = new Scanner(System.in);
@@ -109,15 +103,13 @@ public class AddressBook {
 		phoneNumber = s.next();
 
 		Contacts contacts = new Contacts(firstName, lastName, city, state, address, zip, phoneNumber);
-		
+
 		if (!findContact(firstName, contacts)) {
-			contactList[contactsCount++] = contacts;
+			contactList.put(firstName, contacts);
 			System.out.println("Added successfully");
-		}
-		else {
+		} else {
 			System.out.println("Name already exists. Please try Again");
 		}
-
 
 	}
 
@@ -160,39 +152,28 @@ public class AddressBook {
 
 		Contacts contacts = new Contacts(firstName, lastName, city, state, address, zip, phoneNumber);
 
-		for (int i = 0; i < contactsCount; i++) {
+		Contacts contact = contactList.get(firstName);
 
-			if (contactList[i].firstName.equals(firstName)) {
-
-				contactList[i].firstName = contacts.firstName;
-				contactList[i].lastName = contacts.lastName;
-				contactList[i].address = contacts.address;
-				contactList[i].city = contacts.city;
-				contactList[i].state = contacts.state;
-				contactList[i].zip = contacts.zip;
-				contactList[i].phoneNumber = contacts.phoneNumber;
-				System.out.println("Edited successfully");
-				return;
-			}
-
+		if (contact != null) {
+			contact.firstName = contacts.firstName;
+			contact.lastName = contacts.lastName;
+			contact.address = contacts.address;
+			contact.city = contacts.city;
+			contact.state = contacts.state;
+			contact.zip = contacts.zip;
+			contact.phoneNumber = contacts.phoneNumber;
+			System.out.println("Edited successfully");
+		} else {
+			System.out.println("Name not found");
 		}
 
-		System.out.println("Name not found try again");
-
+		return;
 	}
 
 	public static boolean findContact(String name, Contacts contacts) {
 
-		for (int i = 0; i < contactsCount; i++) {
+		return contactList.containsKey(name);
 
-			if (contactList[i].firstName.equals(name)) {
-
-				return true;
-			}
-
-		}
-
-		return false;
 	}
 
 }
