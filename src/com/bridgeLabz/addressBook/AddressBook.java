@@ -182,11 +182,15 @@ public class AddressBook {
 		List<String> cityAndPerson = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(city))
 				.map(Map.Entry::getKey).collect(Collectors.toList());
 		
-		List<String> stateAndPerson = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(state))
+		List<String> stateAndPerson = contactList.entrySet().stream().filter(e -> e.getValue().state.equalsIgnoreCase(state))
 				.map(Map.Entry::getKey).collect(Collectors.toList());
 		
 		System.out.println(cityAndPerson.toString());
 		System.out.println(stateAndPerson.toString());
+		
+		System.out.println("Count of matching city = " + cityAndPerson.size());
+		System.out.println("Count of matching state = " + stateAndPerson.size());
+
 
 
 	}
