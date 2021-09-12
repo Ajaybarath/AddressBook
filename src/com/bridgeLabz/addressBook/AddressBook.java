@@ -1,12 +1,14 @@
 package com.bridgeLabz.addressBook;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AddressBook {
 
@@ -46,6 +48,7 @@ public class AddressBook {
 				break;
 
 			}
+			searchPersonInCityOrState("asd", "asd");
 
 		}
 
@@ -62,11 +65,10 @@ public class AddressBook {
 		firstName = s.next();
 
 		contactList.remove(firstName);
-		
+
 		System.out.println("Deleted successfully");
 
 	}
-
 
 	public static void addContact() {
 		Scanner s = new Scanner(System.in);
@@ -173,6 +175,17 @@ public class AddressBook {
 	public static boolean findContact(String name, Contacts contacts) {
 
 		return contactList.containsKey(name);
+
+	}
+
+	public static void searchPersonInCityOrState(String state, String city) {
+		List<String> cityAndState = contactList.entrySet().stream().filter(e -> e.getValue().city.startsWith(city))
+				.map(Map.Entry::getKey).collect(Collectors.toList());
+		
+		cityAndState = contactList.entrySet().stream().filter(e -> e.getValue().city.startsWith(state))
+				.map(Map.Entry::getKey).collect(Collectors.toList());
+		
+		System.out.println(cityAndState.toString());
 
 	}
 
