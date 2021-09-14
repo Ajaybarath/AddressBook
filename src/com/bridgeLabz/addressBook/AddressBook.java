@@ -2,6 +2,7 @@ package com.bridgeLabz.addressBook;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,7 +35,8 @@ public class AddressBook {
 			System.out.println("Enter 5 to get number of person in a state");
 			System.out.println("Enter 6 to get people in a city");
 			System.out.println("Enter 7 to get people in a state");
-			System.out.println("Enter 8 to exit");
+			System.out.println("Enter 8 to sort Address book by name");
+			System.out.println("Enter 9 to exit");
 
 			input = s.nextInt();
 
@@ -61,6 +63,9 @@ public class AddressBook {
 				getPeopleInState();
 				break;
 			case (8):
+				sortByPersonName();
+				break;
+			case (9):
 				flag = 1;
 				break;
 
@@ -237,6 +242,16 @@ public class AddressBook {
 		long count = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(city)).count();
 
 		System.out.println("Threr are " + count + " address from this city");
+	}
+
+	public static void sortByPersonName() {
+		List<Contacts> contacts = contactList.entrySet().stream()
+				.sorted((a1, a2) -> a1.getValue().getFirstName().compareTo(a2.getValue().getFirstName()))
+				.map(Map.Entry::getValue)
+				.collect(Collectors.toList());
+
+		contacts.forEach(contact -> System.out.println(contact.getFirstName()));
+
 	}
 
 }
