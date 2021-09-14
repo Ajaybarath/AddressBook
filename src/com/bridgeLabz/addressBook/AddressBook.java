@@ -36,7 +36,8 @@ public class AddressBook {
 			System.out.println("Enter 6 to get people in a city");
 			System.out.println("Enter 7 to get people in a state");
 			System.out.println("Enter 8 to sort Address book by name");
-			System.out.println("Enter 9 to exit");
+			System.out.println("Enter 9 to sort Address book by name");
+			System.out.println("Enter 10 to exit");
 
 			input = s.nextInt();
 
@@ -66,6 +67,9 @@ public class AddressBook {
 				sortByPersonName();
 				break;
 			case (9):
+				sortByCityStateZip();
+				break;
+			case (10):
 				flag = 1;
 				break;
 
@@ -247,11 +251,24 @@ public class AddressBook {
 	public static void sortByPersonName() {
 		List<Contacts> contacts = contactList.entrySet().stream()
 				.sorted((a1, a2) -> a1.getValue().getFirstName().compareTo(a2.getValue().getFirstName()))
+				.map(Map.Entry::getValue).collect(Collectors.toList());
+
+		contacts.forEach(contact -> System.out.println(contact.getFirstName()));
+
+	}
+
+	public static void sortByCityStateZip() {
+
+		Comparator<Contacts> cityStateComparator = Comparator.comparing(Contacts::getCity).thenComparing(Contacts::getState);
+
+		List<Contacts> contacts = contactList.entrySet().stream()
+				.sorted((a1, a2) -> a1.getValue().getCity().compareTo(a2.getValue().getCity()))
+				.sorted((a1, a2) -> a1.getValue().getState().compareTo(a2.getValue().getState()))
+				.sorted((a1, a2) -> a1.getValue().getZip().compareTo(a2.getValue().getZip()))
 				.map(Map.Entry::getValue)
 				.collect(Collectors.toList());
 
 		contacts.forEach(contact -> System.out.println(contact.getFirstName()));
-
 	}
 
 }
