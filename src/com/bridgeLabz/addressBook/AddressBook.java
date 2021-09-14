@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AddressBook {
@@ -174,7 +175,8 @@ public class AddressBook {
 
 	public static boolean findContact(String name, Contacts contacts) {
 
-		return contactList.containsKey(name);
+		return contactList.values().stream().anyMatch(contact -> contact.firstName.equalsIgnoreCase(name));
+//		return contactList.containsKey(name);
 
 	}
 
