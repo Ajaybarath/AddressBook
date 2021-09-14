@@ -203,5 +203,13 @@ public class AddressBook {
 		
 		System.out.println("Threr are " + count + " address from this state");
 	}
+	
+	public static void getCountByCity(String city) {
+		long count = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(city))
+				.count();
+		
+		System.out.println("Threr are " + count + " address from this city");
+	}
+	
 
 }
