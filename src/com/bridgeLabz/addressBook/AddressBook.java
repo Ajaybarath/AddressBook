@@ -50,6 +50,7 @@ public class AddressBook {
 
 			}
 			searchPersonInCityOrState("asd", "qwe");
+			getCountByState("asd");
 
 		}
 
@@ -176,7 +177,6 @@ public class AddressBook {
 	public static boolean findContact(String name, Contacts contacts) {
 
 		return contactList.values().stream().anyMatch(contact -> contact.firstName.equalsIgnoreCase(name));
-//		return contactList.containsKey(name);
 
 	}
 
@@ -195,6 +195,13 @@ public class AddressBook {
 
 
 
+	}
+	
+	public static void getCountByState(String state) {
+		long count = contactList.entrySet().stream().filter(e -> e.getValue().state.equalsIgnoreCase(state))
+				.count();
+		
+		System.out.println("Threr are " + count + " address from this state");
 	}
 
 }
