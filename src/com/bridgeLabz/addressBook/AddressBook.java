@@ -30,7 +30,11 @@ public class AddressBook {
 			System.out.println("Enter 1 to add");
 			System.out.println("Enter 2 to edit");
 			System.out.println("Enter 3 to delete");
-			System.out.println("Enter 4 to exit");
+			System.out.println("Enter 4 to get number of person in a city");
+			System.out.println("Enter 5 to get number of person in a state");
+			System.out.println("Enter 6 to get people in a city");
+			System.out.println("Enter 7 to get people in a state");
+			System.out.println("Enter 8 to exit");
 
 			input = s.nextInt();
 
@@ -45,12 +49,22 @@ public class AddressBook {
 				deleteContact();
 				break;
 			case (4):
+				getCountByCity();
+				break;
+			case (5):
+				getCountByState();
+				break;
+			case (6):
+				getPeopleInCity();
+				break;
+			case (7):
+				getPeopleInState();
+				break;
+			case (8):
 				flag = 1;
 				break;
 
 			}
-			searchPersonInCityOrState("asd", "qwe");
-			getCountByState("asd");
 
 		}
 
@@ -180,36 +194,49 @@ public class AddressBook {
 
 	}
 
-	public static void searchPersonInCityOrState(String state, String city) {
-		List<String> cityAndPerson = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(city))
-				.map(Map.Entry::getKey).collect(Collectors.toList());
-		
-		List<String> stateAndPerson = contactList.entrySet().stream().filter(e -> e.getValue().state.equalsIgnoreCase(state))
-				.map(Map.Entry::getKey).collect(Collectors.toList());
-		
-		System.out.println(cityAndPerson.toString());
+	private static void getPeopleInState() {
+		Scanner s = new Scanner(System.in);
+		System.out.print("Enter the state name to get the count : ");
+		String state = s.next();
+
+		List<String> stateAndPerson = contactList.entrySet().stream()
+				.filter(e -> e.getValue().state.equalsIgnoreCase(state)).map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+
 		System.out.println(stateAndPerson.toString());
-		
-		System.out.println("Count of matching city = " + cityAndPerson.size());
-		System.out.println("Count of matching state = " + stateAndPerson.size());
-
-
 
 	}
-	
-	public static void getCountByState(String state) {
-		long count = contactList.entrySet().stream().filter(e -> e.getValue().state.equalsIgnoreCase(state))
-				.count();
-		
+
+	private static void getPeopleInCity() {
+		Scanner s = new Scanner(System.in);
+		System.out.print("Enter the city name to get the count : ");
+		String city = s.next();
+
+		List<String> cityAndPerson = contactList.entrySet().stream()
+				.filter(e -> e.getValue().city.equalsIgnoreCase(city)).map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+
+		System.out.println(cityAndPerson.toString());
+
+	}
+
+	public static void getCountByState() {
+		Scanner s = new Scanner(System.in);
+		System.out.print("Enter the state name to get the count : ");
+		String state = s.next();
+		long count = contactList.entrySet().stream().filter(e -> e.getValue().state.equalsIgnoreCase(state)).count();
+
 		System.out.println("Threr are " + count + " address from this state");
 	}
-	
-	public static void getCountByCity(String city) {
-		long count = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(city))
-				.count();
-		
+
+	public static void getCountByCity() {
+		Scanner s = new Scanner(System.in);
+		System.out.print("Enter the city name to get the count : ");
+		String city = s.next();
+
+		long count = contactList.entrySet().stream().filter(e -> e.getValue().city.equalsIgnoreCase(city)).count();
+
 		System.out.println("Threr are " + count + " address from this city");
 	}
-	
 
 }
