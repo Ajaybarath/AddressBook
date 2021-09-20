@@ -2,6 +2,7 @@ package com.bridgeLabz.addressBook;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Comparator;
@@ -15,7 +16,7 @@ public class AddressBook {
 
 //	static Contacts[] contactList = new Contacts[5];
 	static Map<String, Contacts> contactList = new HashMap<>();
-	
+
 	public static final String ADDRESS_BOOK_PATH = "addressBook.txt";
 
 	static int contactsCount = 0;
@@ -38,7 +39,8 @@ public class AddressBook {
 			System.out.println("Enter 7 to get people in a state");
 			System.out.println("Enter 8 to sort Address book by name");
 			System.out.println("Enter 9 to sort Address book by name");
-			System.out.println("Enter 10 to exit");
+			System.out.println("Enter 10 to read Address book");
+			System.out.println("Enter 11 to exit");
 
 			input = s.nextInt();
 
@@ -71,6 +73,9 @@ public class AddressBook {
 				sortByCityStateZip();
 				break;
 			case (10):
+				readAddressBook();
+				break;
+			case (11):
 				flag = 1;
 				break;
 
@@ -261,27 +266,35 @@ public class AddressBook {
 
 	public static void sortByCityStateZip() {
 
-		Comparator<Contacts> cityStateComparator = Comparator.comparing(Contacts::getCity).thenComparing(Contacts::getState);
+		Comparator<Contacts> cityStateComparator = Comparator.comparing(Contacts::getCity)
+				.thenComparing(Contacts::getState);
 
 		List<Contacts> contacts = contactList.entrySet().stream()
 				.sorted((a1, a2) -> a1.getValue().getCity().compareTo(a2.getValue().getCity()))
 				.sorted((a1, a2) -> a1.getValue().getState().compareTo(a2.getValue().getState()))
-				.sorted((a1, a2) -> a1.getValue().getZip().compareTo(a2.getValue().getZip()))
-				.map(Map.Entry::getValue)
+				.sorted((a1, a2) -> a1.getValue().getZip().compareTo(a2.getValue().getZip())).map(Map.Entry::getValue)
 				.collect(Collectors.toList());
 
 		contacts.forEach(contact -> System.out.println(contact.getFirstName()));
 	}
-	
+
 	public static void writeContactsToAddressBook() {
 		StringBuffer stringBuffer = new StringBuffer();
 		contactList.values().forEach(contact -> {
 			String contactData = contact.toString().concat("\n");
 			stringBuffer.append(contactData);
 		});
-		
+
 		try {
 			Files.write(Paths.get(ADDRESS_BOOK_PATH), stringBuffer.toString().getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void readAddressBook() {
+		try {
+			Files.lines(new File(ADDRESS_BOOK_PATH).toPath()).forEach(System.out::println);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
