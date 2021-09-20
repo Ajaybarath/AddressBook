@@ -2,7 +2,9 @@ package com.bridgeLabz.addressBook;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 
 import javax.naming.spi.StateFactory;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
@@ -37,6 +40,7 @@ public class AddressBook {
 
 	public static final String ADDRESS_BOOK_PATH = "addressBook.txt";
 	public static final String ADDRESS_BOOK_CSV_FILE = "addressBook.csv";
+	public static final String ADDRESS_BOOK_JSON_FILE = "addressBook.json";
 
 	static int contactsCount = 0;
 
@@ -106,6 +110,7 @@ public class AddressBook {
 
 			writeContactsToAddressBook();
 			writeContactsToAddressBookCSVFile();
+			writeToJsonFile();
 
 		}
 
@@ -365,16 +370,27 @@ public class AddressBook {
 //			System.out.println(contact);
 //		}
 
-		
 		try (CSVReader reader = new CSVReader(new FileReader(ADDRESS_BOOK_CSV_FILE))) {
-            List<String[]> read = reader.readAll();
-            read.forEach(x -> 
-            {
-            	System.out.println(Arrays.toString(x));
-            	
-            });
-        }
+			List<String[]> read = reader.readAll();
+			read.forEach(x -> {
+				System.out.println(Arrays.toString(x));
 
+			});
+		}
+
+	}
+
+	public static void writeToJsonFile() throws IOException {
+//		CSVReader reader = new CSVReader(new FileReader(ADDRESS_BOOK_CSV_FILE));
+		List<Contacts> list = contactList.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+
+		Gson gson = new Gson();
+		String json = "{ ADDRESSBOOK: " + gson.toJson(list) + " }";
+
+		FileWriter fileWriter = new FileWriter(ADDRESS_BOOK_JSON_FILE);
+		fileWriter.write(json);
+
+		fileWriter.close();
 	}
 
 }
