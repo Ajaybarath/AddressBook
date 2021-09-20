@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -111,6 +112,7 @@ public class AddressBook {
 			writeContactsToAddressBook();
 			writeContactsToAddressBookCSVFile();
 			writeToJsonFile();
+			readJsonFile();
 
 		}
 
@@ -381,16 +383,30 @@ public class AddressBook {
 	}
 
 	public static void writeToJsonFile() throws IOException {
-//		CSVReader reader = new CSVReader(new FileReader(ADDRESS_BOOK_CSV_FILE));
 		List<Contacts> list = contactList.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
 
 		Gson gson = new Gson();
-		String json = "{ ADDRESSBOOK: " + gson.toJson(list) + " }";
+		String json = gson.toJson(list) ;
 
 		FileWriter fileWriter = new FileWriter(ADDRESS_BOOK_JSON_FILE);
 		fileWriter.write(json);
 
 		fileWriter.close();
+	}
+	
+	public static void readJsonFile() throws IOException {
+
+		Gson gson = new Gson();
+
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(ADDRESS_BOOK_JSON_FILE));
+		Contacts contacts[] = gson.fromJson(bufferedReader, Contacts[].class);
+		
+		List<Contacts> list = Arrays.asList(contacts);
+		list.forEach(x -> {
+			System.out.println(x.toString());
+
+		});
+		
 	}
 
 }
