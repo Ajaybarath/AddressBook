@@ -3,6 +3,7 @@ package com.bridgeLabz.addressBook;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Comparator;
@@ -10,7 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import javax.naming.spi.StateFactory;
+
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 public class AddressBook {
 
@@ -18,10 +28,11 @@ public class AddressBook {
 	static Map<String, Contacts> contactList = new HashMap<>();
 
 	public static final String ADDRESS_BOOK_PATH = "addressBook.txt";
+	public static final String ADDRESS_BOOK_CSV_FILE = "addressBook.csv";
 
 	static int contactsCount = 0;
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
 
 		Scanner s = new Scanner(System.in);
 
@@ -82,6 +93,8 @@ public class AddressBook {
 			}
 
 			writeContactsToAddressBook();
+			writeContactsToAddressBookCSVFile();
+
 		}
 
 	}
@@ -297,6 +310,31 @@ public class AddressBook {
 			Files.lines(new File(ADDRESS_BOOK_PATH).toPath()).forEach(System.out::println);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void writeContactsToAddressBookCSVFile() throws IOException {
+
+		Writer writer = null;
+		try {
+			writer = Files.newBufferedWriter(Paths.get(ADDRESS_BOOK_CSV_FILE));
+
+			StatefulBeanToCsv<Contacts> beanToCsv = new StatefulBeanToCsvBuilder(writer)
+					.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER).build();
+
+			List<Contacts> contacts = contactList.entrySet().stream().map(Map.Entry::getValue)
+					.collect(Collectors.toList());
+
+			beanToCsv.write(contacts);
+			System.out.println(contacts.toString());
+		} catch (CsvDataTypeMismatchException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CsvRequiredFieldEmptyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			writer.close();
 		}
 	}
 
