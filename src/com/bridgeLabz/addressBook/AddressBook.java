@@ -1,13 +1,18 @@
 package com.bridgeLabz.addressBook;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -16,7 +21,10 @@ import java.util.stream.Collectors;
 
 import javax.naming.spi.StateFactory;
 
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -51,7 +59,8 @@ public class AddressBook {
 			System.out.println("Enter 8 to sort Address book by name");
 			System.out.println("Enter 9 to sort Address book by name");
 			System.out.println("Enter 10 to read Address book");
-			System.out.println("Enter 11 to exit");
+			System.out.println("Enter 11 to read Address book csv file");
+			System.out.println("Enter 12 to exit");
 
 			input = s.nextInt();
 
@@ -87,6 +96,9 @@ public class AddressBook {
 				readAddressBook();
 				break;
 			case (11):
+				readAddressBookCSVFile();
+				break;
+			case (12):
 				flag = 1;
 				break;
 
@@ -326,7 +338,7 @@ public class AddressBook {
 					.collect(Collectors.toList());
 
 			beanToCsv.write(contacts);
-			System.out.println(contacts.toString());
+//			System.out.println(contacts.toString());
 		} catch (CsvDataTypeMismatchException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -336,6 +348,33 @@ public class AddressBook {
 		} finally {
 			writer.close();
 		}
+	}
+
+	public static void readAddressBookCSVFile() throws IOException {
+//		Reader reader = new BufferedReader(new FileReader(ADDRESS_BOOK_CSV_FILE));
+//		
+//		CsvToBean<Contacts> csvTobean = new CsvToBeanBuilder(reader)
+//				.withType(Contacts.class)
+//				.withIgnoreLeadingWhiteSpace(true)
+//				.build();
+//		
+//		System.out.println(csvTobean);
+//		
+//		List<Contacts> list = csvTobean.parse();
+//		for(Contacts contact: list) {
+//			System.out.println(contact);
+//		}
+
+		
+		try (CSVReader reader = new CSVReader(new FileReader(ADDRESS_BOOK_CSV_FILE))) {
+            List<String[]> read = reader.readAll();
+            read.forEach(x -> 
+            {
+            	System.out.println(Arrays.toString(x));
+            	
+            });
+        }
+
 	}
 
 }
