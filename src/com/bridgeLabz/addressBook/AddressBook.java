@@ -1,21 +1,22 @@
 package com.bridgeLabz.addressBook;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AddressBook {
 
 //	static Contacts[] contactList = new Contacts[5];
 	static Map<String, Contacts> contactList = new HashMap<>();
+	
+	public static final String ADDRESS_BOOK_PATH = "addressBook.txt";
 
 	static int contactsCount = 0;
 
@@ -75,6 +76,7 @@ public class AddressBook {
 
 			}
 
+			writeContactsToAddressBook();
 		}
 
 	}
@@ -269,6 +271,20 @@ public class AddressBook {
 				.collect(Collectors.toList());
 
 		contacts.forEach(contact -> System.out.println(contact.getFirstName()));
+	}
+	
+	public static void writeContactsToAddressBook() {
+		StringBuffer stringBuffer = new StringBuffer();
+		contactList.values().forEach(contact -> {
+			String contactData = contact.toString().concat("\n");
+			stringBuffer.append(contactData);
+		});
+		
+		try {
+			Files.write(Paths.get(ADDRESS_BOOK_PATH), stringBuffer.toString().getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
