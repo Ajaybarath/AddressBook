@@ -34,7 +34,7 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-public class AddressBook {
+public class AddressBook implements AddressBookInterface {
 
 //	static Contacts[] contactList = new Contacts[5];
 	static Map<String, Contacts> contactList = new HashMap<>();
@@ -45,9 +45,11 @@ public class AddressBook {
 
 	static int contactsCount = 0;
 
-	public static void main(String args[]) throws IOException {
+	public static void main(String args[]) throws IOException, AddressBookException {
 
 		Scanner s = new Scanner(System.in);
+
+		AddressBook addressbook = new AddressBook();
 
 		int input;
 		int flag = 0;
@@ -65,60 +67,63 @@ public class AddressBook {
 			System.out.println("Enter 9 to sort Address book by name");
 			System.out.println("Enter 10 to read Address book");
 			System.out.println("Enter 11 to read Address book csv file");
-			System.out.println("Enter 12 to exit");
+			System.out.println("Enter 12 to read Address book json file");
+			System.out.println("Enter 13 to exit");
 
 			input = s.nextInt();
 
 			switch (input) {
 			case (1):
-				addContact();
+				addressbook.addContact();
 				break;
 			case (2):
-				editContact();
+				addressbook.editContact();
 				break;
 			case (3):
-				deleteContact();
+				addressbook.deleteContact();
 				break;
 			case (4):
-				getCountByCity();
+				addressbook.getCountByCity();
 				break;
 			case (5):
-				getCountByState();
+				addressbook.getCountByState();
 				break;
 			case (6):
-				getPeopleInCity();
+				addressbook.getPeopleInCity();
 				break;
 			case (7):
-				getPeopleInState();
+				addressbook.getPeopleInState();
 				break;
 			case (8):
-				sortByPersonName();
+				addressbook.sortByPersonName();
 				break;
 			case (9):
-				sortByCityStateZip();
+				addressbook.sortByCityStateZip();
 				break;
 			case (10):
-				readAddressBook();
+				addressbook.readAddressBook();
 				break;
 			case (11):
-				readAddressBookCSVFile();
+				addressbook.readAddressBookCSVFile();
 				break;
 			case (12):
+				addressbook.readJsonFile();
+				break;
+			case (13):
 				flag = 1;
 				break;
 
 			}
 
-			writeContactsToAddressBook();
-			writeContactsToAddressBookCSVFile();
-			writeToJsonFile();
-			readJsonFile();
+			addressbook.writeContactsToAddressBook();
+			addressbook.writeContactsToAddressBookCSVFile();
+			addressbook.writeToJsonFile();
 
 		}
 
 	}
 
-	private static void deleteContact() {
+	public void deleteContact() {
 		Scanner s = new Scanner(System.in);
 
 		String firstName;
@@ -134,7 +139,7 @@ public class AddressBook {
 
 	}
 
-	public static void addContact() {
+	public void addContact() {
 		Scanner s = new Scanner(System.in);
 
 		String firstName;
@@ -179,7 +184,7 @@ public class AddressBook {
 
 	}
 
-	public static void editContact() {
+	public void editContact() {
 
 		Scanner s = new Scanner(System.in);
 
@@ -236,13 +241,13 @@ public class AddressBook {
 		return;
 	}
 
-	public static boolean findContact(String name, Contacts contacts) {
+	public boolean findContact(String name, Contacts contacts) {
 
 		return contactList.values().stream().anyMatch(contact -> contact.firstName.equalsIgnoreCase(name));
 
 	}
 
-	private static void getPeopleInState() {
+	public void getPeopleInState() {
 		Scanner s = new Scanner(System.in);
 		System.out.print("Enter the state name to get the count : ");
 		String state = s.next();
@@ -255,7 +260,7 @@ public class AddressBook {
 
 	}
 
-	private static void getPeopleInCity() {
+	public void getPeopleInCity() {
 		Scanner s = new Scanner(System.in);
 		System.out.print("Enter the city name to get the count : ");
 		String city = s.next();
@@ -268,7 +273,7 @@ public class AddressBook {
 
 	}
 
-	public static void getCountByState() {
+	public void getCountByState() {
 		Scanner s = new Scanner(System.in);
 		System.out.print("Enter the state name to get the count : ");
 		String state = s.next();
@@ -277,7 +282,7 @@ public class AddressBook {
 		System.out.println("Threr are " + count + " address from this state");
 	}
 
-	public static void getCountByCity() {
+	public void getCountByCity() {
 		Scanner s = new Scanner(System.in);
 		System.out.print("Enter the city name to get the count : ");
 		String city = s.next();
@@ -287,7 +292,7 @@ public class AddressBook {
 		System.out.println("Threr are " + count + " address from this city");
 	}
 
-	public static void sortByPersonName() {
+	public void sortByPersonName() {
 		List<Contacts> contacts = contactList.entrySet().stream()
 				.sorted((a1, a2) -> a1.getValue().getFirstName().compareTo(a2.getValue().getFirstName()))
 				.map(Map.Entry::getValue).collect(Collectors.toList());
@@ -296,7 +301,7 @@ public class AddressBook {
 
 	}
 
-	public static void sortByCityStateZip() {
+	public void sortByCityStateZip() {
 
 		Comparator<Contacts> cityStateComparator = Comparator.comparing(Contacts::getCity)
 				.thenComparing(Contacts::getState);
@@ -310,7 +315,7 @@ public class AddressBook {
 		contacts.forEach(contact -> System.out.println(contact.getFirstName()));
 	}
 
-	public static void writeContactsToAddressBook() {
+	public void writeContactsToAddressBook() throws AddressBookException {
 		StringBuffer stringBuffer = new StringBuffer();
 		contactList.values().forEach(contact -> {
 			String contactData = contact.toString().concat("\n");
@@ -320,23 +325,27 @@ public class AddressBook {
 		try {
 			Files.write(Paths.get(ADDRESS_BOOK_PATH), stringBuffer.toString().getBytes());
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new AddressBookException(e.getMessage());
 		}
 	}
 
-	public static void readAddressBook() {
+	public void readAddressBook() throws AddressBookException {
 		try {
 			Files.lines(new File(ADDRESS_BOOK_PATH).toPath()).forEach(System.out::println);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new AddressBookException(e.getMessage());
 		}
 	}
 
-	public static void writeContactsToAddressBookCSVFile() throws IOException {
+	public void writeContactsToAddressBookCSVFile() throws AddressBookException {
 
 		Writer writer = null;
 		try {
-			writer = Files.newBufferedWriter(Paths.get(ADDRESS_BOOK_CSV_FILE));
+			try {
+				writer = Files.newBufferedWriter(Paths.get(ADDRESS_BOOK_CSV_FILE));
+			} catch (IOException e) {
+				throw new AddressBookException(e.getMessage());
+			}
 
 			StatefulBeanToCsv<Contacts> beanToCsv = new StatefulBeanToCsvBuilder(writer)
 					.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER).build();
@@ -345,19 +354,14 @@ public class AddressBook {
 					.collect(Collectors.toList());
 
 			beanToCsv.write(contacts);
-//			System.out.println(contacts.toString());
 		} catch (CsvDataTypeMismatchException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new AddressBookException(e.getMessage());
 		} catch (CsvRequiredFieldEmptyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			writer.close();
+			throw new AddressBookException(e.getMessage());
 		}
 	}
 
-	public static void readAddressBookCSVFile() throws IOException {
+	public void readAddressBookCSVFile() throws AddressBookException {
 //		Reader reader = new BufferedReader(new FileReader(ADDRESS_BOOK_CSV_FILE));
 //		
 //		CsvToBean<Contacts> csvTobean = new CsvToBeanBuilder(reader)
@@ -378,35 +382,54 @@ public class AddressBook {
 				System.out.println(Arrays.toString(x));
 
 			});
+		} catch (FileNotFoundException e) {
+			throw new AddressBookException(e.getMessage());
+
+		} catch (IOException e) {
+			throw new AddressBookException(e.getMessage());
+
 		}
 
 	}
 
-	public static void writeToJsonFile() throws IOException {
+	public void writeToJsonFile() throws AddressBookException {
 		List<Contacts> list = contactList.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
 
 		Gson gson = new Gson();
-		String json = gson.toJson(list) ;
+		String json = gson.toJson(list);
 
-		FileWriter fileWriter = new FileWriter(ADDRESS_BOOK_JSON_FILE);
-		fileWriter.write(json);
+		FileWriter fileWriter;
+		try {
+			fileWriter = new FileWriter(ADDRESS_BOOK_JSON_FILE);
+			fileWriter.write(json);
 
-		fileWriter.close();
+			fileWriter.close();
+		} catch (IOException e) {
+			throw new AddressBookException(e.getMessage());
+
+		}
+
 	}
-	
-	public static void readJsonFile() throws IOException {
+
+	public void readJsonFile() throws AddressBookException {
 
 		Gson gson = new Gson();
 
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(ADDRESS_BOOK_JSON_FILE));
+		BufferedReader bufferedReader;
+		try {
+			bufferedReader = new BufferedReader(new FileReader(ADDRESS_BOOK_JSON_FILE));
+		} catch (FileNotFoundException e) {
+			throw new AddressBookException(e.getMessage());
+
+		}
 		Contacts contacts[] = gson.fromJson(bufferedReader, Contacts[].class);
-		
+
 		List<Contacts> list = Arrays.asList(contacts);
 		list.forEach(x -> {
 			System.out.println(x.toString());
 
 		});
-		
+
 	}
 
 }
