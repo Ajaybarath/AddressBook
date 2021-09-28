@@ -1,4 +1,4 @@
-package com.bridgeLabz.addressBook;
+package main.com.bridgeLabz.addressBook;
 
 import com.opencsv.bean.CsvBindByName;
 
