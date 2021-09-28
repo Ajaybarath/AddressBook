@@ -25,9 +25,30 @@ public class Contacts {
 	@CsvBindByName
 	String phoneNumber;
 
-	public Contacts(String firstName, String lastName, String city, String state, String address, String zip,
-			String phoneNumber) {
-		
+	int id;
+
+	public Contacts(String firstName, String lastName, String city, String state, String address, String zip, String phoneNumber) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.city = city;
+		this.state = state;
+		this.address = address;
+		this.zip = zip;
+		this.phoneNumber = phoneNumber;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Contacts(int id, String firstName, String lastName, String city, String state, String address, String zip,
+					String phoneNumber) {
+
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.city = city;
