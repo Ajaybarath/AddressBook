@@ -1,6 +1,4 @@
-package com.bridgeLabz.addressBook;
-
-import java.io.IOException;
+package main.com.bridgeLabz.addressBook;
 
 public interface AddressBookInterface {
 
