@@ -38,11 +38,21 @@ public class AddressBookDBIOTest {
         long entries = list.size();
         Assert.assertEquals(2, entries);
     }
+
     @Test
     public void orderPeopleByName() throws AddressBookException {
 
         AddressBookDBService addressBookDBService = new AddressBookDBService();
         List<Contacts> list = addressBookDBService.orderByName();
+        long entries = list.size();
+        Assert.assertEquals(2, entries);
+    }
+
+    @Test
+    public void orderCityStateAndZip() throws AddressBookException {
+
+        AddressBookDBService addressBookDBService = new AddressBookDBService();
+        List<Contacts> list = addressBookDBService.orderByCityStateZip();
         long entries = list.size();
         Assert.assertEquals(2, entries);
     }
