@@ -228,4 +228,63 @@ public class AddressBookDBService {
             throw new AddressBookException(throwables.getMessage());
         }
     }
+
+    public int updateContactToAddressBook(String firstName, String lastName, String phone, String email, String address, String city, String state, String zip) {
+        int rowAffected = 0;
+        Connection connection = null;
+        Contacts contacts = null;
+        try {
+            connection = this.getConnection();
+            connection.setAutoCommit(false);
+        } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            String sql = String.format("update address_book set set first_name = '%s', last_name = '%s', phone_number = '%s' , email = '%s', date = '%s');", firstName, lastName, phone, email, LocalDate.now());
+             rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+
+        } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }
+
+        try (Statement statement = connection.createStatement()) {
+
+            String sql = String.format("update address set address = '%s', city = '%s', state = '%s', zip = '%s');", address, city, state, zip);
+            rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+
+        } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }
+
+        try {
+            connection.commit();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+        return rowAffected;
+    }
 }

@@ -36,4 +36,9 @@ public class AddressBookService {
         return new AddressBookDBService().getPeopleByDateAdded(startDate, endDate);
 
     }
+
+    public int updateContactToAddressBook(String firstName, String lastName, String phone, String email, String address, String city, String state, String zip) {
+        return new AddressBookDBService().updateContactToAddressBook(firstName, lastName, phone, email, address, city, state, zip);
+
+    }
 }
