@@ -70,6 +70,16 @@ public class AddressBookDBIOTest {
     }
 
     @Test
+    public void updateContactIntoAddressBook() throws AddressBookException {
+
+        AddressBookService addressBookService = new AddressBookService();
+
+        int result = addressBookService.updateContactToAddressBook("Ajay", "Barath", "9087654321", "asd@as.asd", "velayuthampalayam","karur" , "tamil nadu", "123456");
+
+        Assert.assertEquals(1, result);
+    }
+
+    @Test
     public void getPeopleByDateAdded() throws SQLException, AddressBookException {
 
         AddressBookService addressBookService = new AddressBookService();
