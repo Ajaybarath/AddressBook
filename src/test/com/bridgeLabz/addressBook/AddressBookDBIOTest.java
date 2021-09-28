@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class AddressBookDBIOTest {
@@ -66,6 +67,16 @@ public class AddressBookDBIOTest {
         Contacts contacts = addressBookService.addContactToAddressBook("Ajay", "Barath", "9087654321", "asd@as.asd", "velayuthampalayam","karur" , "tamil nadu", "123456");
 
         Assert.assertEquals("Ajay", contacts.getFirstName());
+    }
+
+    @Test
+    public void getPeopleByDateAdded() throws SQLException, AddressBookException {
+
+        AddressBookService addressBookService = new AddressBookService();
+
+        List<Contacts> list = addressBookService.getPeopleByDateAdded(LocalDate.parse("2021-01-01"), LocalDate.parse("2021-01-04"));
+        long entries = list.size();
+        Assert.assertEquals(2, entries);
     }
 
 }
