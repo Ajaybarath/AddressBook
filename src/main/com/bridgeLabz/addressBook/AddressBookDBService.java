@@ -100,4 +100,24 @@ public class AddressBookDBService {
             throw new AddressBookException(throwables.getMessage());
         }
     }
+
+
+    public List<Contacts> orderByName() throws AddressBookException {
+        try {
+            String sql = "select * from address_book where order by name ";
+            List<Contacts> contactsList = new ArrayList<>();
+            Connection connection = getConnection();
+            Statement statement = null;
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            contactsList = this.getAddressData(resultSet);
+
+            return contactsList;
+
+        } catch (AddressBookException e) {
+            throw new AddressBookException(e.getMessage());
+        } catch (SQLException throwables) {
+            throw new AddressBookException(throwables.getMessage());
+        }
+    }
 }
