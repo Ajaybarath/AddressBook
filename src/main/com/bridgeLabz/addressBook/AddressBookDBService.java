@@ -1,7 +1,6 @@
-package com.bridgeLabz.addressBook;
+package main.com.bridgeLabz.addressBook;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +38,11 @@ public class AddressBookDBService {
 
 
     }
+
+    public List<Contacts> peopleInCity() {
+        
+    }
+
 
     private List<Contacts> getAddressData(ResultSet resultSet) throws AddressBookException {
         List<Contacts> contactsList = new ArrayList<>();
