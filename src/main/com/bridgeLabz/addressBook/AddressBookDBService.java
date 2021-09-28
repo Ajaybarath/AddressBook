@@ -208,4 +208,24 @@ public class AddressBookDBService {
         return contacts;
 
     }
+
+    public List<Contacts> getPeopleByDateAdded(LocalDate startDate, LocalDate endDate) throws AddressBookException {
+
+        try {
+            String sql = "select * from address_book where date between '" + startDate + "' and '" + endDate + "'";
+            List<Contacts> contactsList = new ArrayList<>();
+            Connection connection = getConnection();
+            Statement statement = null;
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            contactsList = this.getAddressData(resultSet);
+
+            return contactsList;
+
+        } catch (AddressBookException e) {
+            throw new AddressBookException(e.getMessage());
+        } catch (SQLException throwables) {
+            throw new AddressBookException(throwables.getMessage());
+        }
+    }
 }

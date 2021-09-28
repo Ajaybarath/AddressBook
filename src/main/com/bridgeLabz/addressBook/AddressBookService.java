@@ -1,6 +1,7 @@
 package main.com.bridgeLabz.addressBook;
 
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.List;
 
 public class AddressBookService {
@@ -31,4 +32,8 @@ public class AddressBookService {
     }
 
 
+    public List<Contacts> getPeopleByDateAdded(LocalDate startDate, LocalDate endDate) throws AddressBookException {
+        return new AddressBookDBService().getPeopleByDateAdded(startDate, endDate);
+
+    }
 }
