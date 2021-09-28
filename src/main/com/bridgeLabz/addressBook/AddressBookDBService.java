@@ -1,6 +1,7 @@
 package main.com.bridgeLabz.addressBook;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,7 +160,7 @@ public class AddressBookDBService {
         }
 
         try (Statement statement = connection.createStatement()) {
-            String sql = String.format("insert into address_book (first_name, last_name, phone_number, email) value('%s', %s, '%s', '%s');", firstName, lastName, phone, email);
+            String sql = String.format("insert into address_book (first_name, last_name, phone_number, email, date) value('%s', %s, '%s', '%s');", firstName, lastName, phone, email, LocalDate.now());
             int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
             if (rowAffected == 1) {
                 ResultSet resultSet = statement.getGeneratedKeys();
