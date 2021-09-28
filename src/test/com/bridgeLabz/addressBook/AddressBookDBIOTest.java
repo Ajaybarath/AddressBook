@@ -30,5 +30,14 @@ public class AddressBookDBIOTest {
         Assert.assertEquals(2, entries);
     }
 
-    
+    @Test
+    public void getPeopleByState() throws SQLException, AddressBookException {
+
+        AddressBookDBService addressBookDBService = new AddressBookDBService();
+        List<Contacts> list = addressBookDBService.peopleInState("karur");
+        long entries = list.size();
+        Assert.assertEquals(2, entries);
+    }
+
+
 }
