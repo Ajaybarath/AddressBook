@@ -39,8 +39,23 @@ public class AddressBookDBService {
 
     }
 
-    public List<Contacts> peopleInCity() {
-        
+    public List<Contacts> peopleInCity(String city) throws AddressBookException {
+        try {
+            String sql = "select * from address_book where city = " + city;
+            List<Contacts> contactsList = new ArrayList<>();
+            Connection connection = getConnection();
+            Statement statement = null;
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            contactsList = this.getAddressData(resultSet);
+
+            return contactsList;
+
+        } catch (AddressBookException e) {
+            throw new AddressBookException(e.getMessage());
+        } catch (SQLException throwables) {
+            throw new AddressBookException(throwables.getMessage());
+        }
     }
 
 
