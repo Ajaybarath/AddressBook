@@ -1,4 +1,4 @@
-package com.bridgeLabz.addressBook;
+package main.com.bridgeLabz.addressBook;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,29 +6,20 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
-import javax.naming.spi.StateFactory;
 
 import com.google.gson.Gson;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -430,6 +421,11 @@ public class AddressBook implements AddressBookInterface {
 
 		});
 
+	}
+
+	public List<Contacts> readAddressBookFromDB() throws AddressBookException {
+		AddressBookDBService addressBookDBService = new AddressBookDBService();
+		return addressBookDBService.readAddressBook();
 	}
 
 }
