@@ -89,4 +89,23 @@ public class AddressBookDBIOTest {
         Assert.assertEquals(2, entries);
     }
 
+    @Test
+    public void addRelationship() throws AddressBookException {
+
+        AddressBookService addressBookService = new AddressBookService();
+
+        Relationship relationship = addressBookService.addRelationShip("Family");
+
+        Assert.assertEquals("Family", relationship.getName());
+    }
+
+    @Test
+    public void addRelationshipIdToContacts() throws AddressBookException {
+
+        AddressBookService addressBookService = new AddressBookService();
+
+        Relationship relationship = addressBookService.addRelationShip("Family");
+
+        Assert.assertEquals("Family", relationship.getName());
+    }
 }
