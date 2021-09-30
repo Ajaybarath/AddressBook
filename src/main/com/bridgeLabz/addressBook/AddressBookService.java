@@ -41,4 +41,8 @@ public class AddressBookService {
         return new AddressBookDBService().updateContactToAddressBook(firstName, lastName, phone, email, address, city, state, zip);
 
     }
+
+    public Relationship addRelationShip(String relationship) {
+        return  new AddressBookDBService().addRelationShip(relationship);
+    }
 }

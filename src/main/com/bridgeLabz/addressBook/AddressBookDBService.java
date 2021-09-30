@@ -287,4 +287,58 @@ public class AddressBookDBService {
         }
         return rowAffected;
     }
+
+    public Relationship addRelationShip(String name) {
+
+        int rel_id = -1;
+        Connection connection = null;
+        Relationship relationship = null;
+        try {
+            connection = this.getConnection();
+            connection.setAutoCommit(false);
+        } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            String sql = String.format("insert into relationship (type) value('%s');", name);
+            int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+            if (rowAffected == 1) {
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) rel_id = resultSet.getInt(1);
+
+                relationship = new Relationship(rel_id, name);
+
+            }
+        } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }
+
+        try {
+            connection.commit();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+
+        return relationship;
+
+    }
 }
