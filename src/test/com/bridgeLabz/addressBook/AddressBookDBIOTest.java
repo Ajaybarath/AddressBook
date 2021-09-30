@@ -104,8 +104,8 @@ public class AddressBookDBIOTest {
 
         AddressBookService addressBookService = new AddressBookService();
 
-        Relationship relationship = addressBookService.addRelationShip("Family");
+        AddressbookRelationship relationship = addressBookService.addRelationshipIdToContacts("Family", "Ajay");
 
-        Assert.assertEquals("Family", relationship.getName());
+        Assert.assertEquals(1, relationship.getContactId());
     }
 }
