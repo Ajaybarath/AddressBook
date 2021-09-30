@@ -341,4 +341,93 @@ public class AddressBookDBService {
         return relationship;
 
     }
+
+    public int getContactId(String name) throws AddressBookException {
+        try {
+            String sql = "Select * from address_book where first_name = '" + name + "';";
+            System.out.println(sql);
+            Connection connection = getConnection();
+            Statement statement = null;
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            resultSet.next();
+            int id = resultSet.getInt("id");
+
+            return id;
+        } catch (SQLException throwables) {
+            throw new AddressBookException(throwables.getMessage());
+        }
+    }
+
+    public int getRelationshipId(String name) throws AddressBookException {
+        try {
+            String sql = "Select * from relationship where type = '" + name + "';";
+            System.out.println(sql);
+            Connection connection = getConnection();
+            Statement statement = null;
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            resultSet.next();
+            int id = resultSet.getInt("id");
+
+            return id;
+        } catch (SQLException throwables) {
+            throw new AddressBookException(throwables.getMessage());
+        }
+    }
+
+    public AddressbookRelationship addRelationshipIdToContacts(String type, String name) throws AddressBookException {
+
+        int rel_id = this.getRelationshipId(type);
+        int contact_id = this.getContactId(name);
+        Connection connection = null;
+        AddressbookRelationship relationship = null;
+        try {
+            connection = this.getConnection();
+            connection.setAutoCommit(false);
+        } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            String sql = String.format("insert into address_relationship (add_id, type_id) value('%s', '%s');", contact_id, rel_id);
+            int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+            if (rowAffected == 1) {
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) rel_id = resultSet.getInt(1);
+
+                relationship = new AddressbookRelationship(contact_id, rel_id);
+
+            }
+        } catch (SQLException throwables) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            throwables.printStackTrace();
+        }
+
+        try {
+            connection.commit();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+
+        return relationship;
+
+    }
 }

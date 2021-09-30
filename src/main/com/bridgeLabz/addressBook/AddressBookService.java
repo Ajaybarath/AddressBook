@@ -45,4 +45,8 @@ public class AddressBookService {
     public Relationship addRelationShip(String relationship) {
         return  new AddressBookDBService().addRelationShip(relationship);
     }
+
+    public AddressbookRelationship addRelationshipIdToContacts(String type, String name) throws AddressBookException {
+        return new AddressBookDBService().addRelationshipIdToContacts(type, name);
+    }
 }
